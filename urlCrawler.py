@@ -5,26 +5,33 @@ import requests
 import json
 import time
 
-url = "http://www.chinatimes.com/realtimenews/260410"
+
 
 temp = []
 
 def crawl():
-    global url
+    url = "http://www.chinatimes.com/realtimenews/260410?page="
     data = []
-    driver = webdriver.Chrome(r"./driver/chromedriver.exe")
-    driver.get(url)
-    res = requests.get(url)
-    soup = BeautifulSoup(res.text, 'html.parser')
-    for i in soup.findAll('h2'):
-        data.append(i.find('a')['href'])
+    # driver = webdriver.Chrome(r"./driver/chromedriver.exe")
+    # driver.get(url)
+    for i in range (1, 31):
+        res = requests.get(url+str(i))
+        soup = BeautifulSoup(res.text, 'html.parser')
+        for i in soup.findAll('h2'):
+            data.append(i.find('a')['href'])
     # pprint(data)
-    driver.find_element_by_link_text('下一頁').click()
-    time.sleep(3)
-    url = driver.current_url
-    driver.quit()
+    # driver.find_element_by_link_text('下一頁').click()
+    # time.sleep(3)
+    # url = driver.current_url
+    # driver.quit()
     return data
 
-for i in range(3):
-    temp.extend(crawl())
-pprint(temp)
+data = crawl()
+with open('url.json', 'w') as f:
+    json.dump(data, f)
+
+
+with open('url.json', 'r') as f:
+    data = json.load(f)
+
+pprint(data)
