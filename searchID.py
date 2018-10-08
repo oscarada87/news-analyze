@@ -74,22 +74,28 @@ class IDCrawler(Crawler):
     def CrawlAllNews(self):
         count = 1
         for link in self.urlList:
-            self.GetNewsSoup(link)
-            self.GetTitle()
-            self.GetTime()
-            self.GetContent()
-            self.GetResource()
-            self.news.append(self.singleNews)
-            print("第" + str(count) + "則新聞完成!!")
-            self.singleNews = {'title':'', 'time':'', 'content':'', 'resource':'', 'url':''}
-            count = count + 1
+            try:
+                self.GetNewsSoup(link)
+                self.GetTitle()
+                print("---第" + str(count) + "則新聞抓取標題---")
+                self.GetTime()
+                print("---第" + str(count) + "則新聞抓取時間---")
+                self.GetContent()
+                print("---第" + str(count) + "則新聞抓取內文---")
+                self.GetResource()
+                print("---第" + str(count) + "則新聞抓取來源---")
+                self.news.append(self.singleNews)
+                print("第" + str(count) + "則新聞完成!!")
+                self.singleNews = {'title':'', 'time':'', 'content':'', 'resource':'', 'url':''}
+                count = count + 1
+            except:
+                print("ERROR---第" + str(count) + "則新聞失敗!!")
 
     def Start(self):
         self.GetKeyUrlsWithkeyWord()
         self.GetNewsUrls()
         # pprint(self.urlList)
         self.CrawlAllNews()
-        pprint(self.news)
 
 def main():
     keyWord = input("請輸入關鍵字: ")
@@ -97,7 +103,10 @@ def main():
     try:
         CT.Start()
     except:
-        pass
-    time.sleep(100)
+        print('Error Occur!!')
+
+
+    print('End Program!')
+    pprint(CT.news)
 
 main()
